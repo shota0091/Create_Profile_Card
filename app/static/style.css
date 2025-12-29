@@ -1,0 +1,22 @@
+.app{
+    display:flex;
+    gap: 16px;
+    min-height: 100vh;
+}
+
+.input-side{
+  background: #696969;
+  flex: 2;
+}
+
+.preview-side{
+  background: #c0c0c0;
+  flex: 3;
+  min-height: 200px;
+}
+
+@media (max-width: 900px){
+  .app{
+    flex-direction: column;
+  }
+}
