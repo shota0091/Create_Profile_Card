@@ -7,18 +7,97 @@
 
   <!-- file:// でも読める相対パス -->
   <link rel="stylesheet" href="../static/style.css" />
-  <script src="../static/app.js" defer></script>
+  
+  <script src="../static/preview.js" defer></script>
+  <!-- <script src="../static/bind.js" defer></script>-->
+  <script src="../static/select-region.js" defer></script>
+  <script src="../static/main.js" defer></script>
 </head>
 <body>
   <div class="app">
-    <div class="input-side">入力画面
+    <div class="input-side">
+        <label class="input-side-title">入力画面</label>
         <label>
             Name:
-        <input type="text" class="input-Name" name="displayName">
+            <input type="text" class="input-Name" name="displayName">
         </label>
+
+        <label>
+            地域（地方）:
+            <select id="areaSelect" name="areaKey">
+                <option value="">未選択</option>
+                <option value="hokkaido_tohoku">北海道・東北</option>
+                <option value="kanto">関東</option>
+                <option value="hokuriku">北陸</option>
+                <option value="chubu">中部</option>
+                <option value="kinki">近畿</option>
+                <option value="chugoku">中国</option>
+                <option value="shikoku">四国</option>
+                <option value="kyushu_okinawa">九州・沖縄</option>
+            </select>
+        </label>
+
+        <label>
+            都道府県:
+            <select id="prefSelect" name="prefecture" disabled>
+                <option value="">地方を選択してください</option>
+            </select>
+        </label>
+
+
+        <label>
+            年齢:
+            <input type="number" class="input-age" name="age">
+        </label>
+
+        <label>
+            誕生日:
+            <input type="text" class="input-birthday" name="birthday">
+        </label>
+
+        <label>
+            職業:
+            <input type="text" class="input-job" name="job">
+        </label>
+
+        <label>
+            趣味(最大5つまで入力可):
+            <input type="text" class="input-Name" name="hobby">
+            <button data-set="1">追加</button>
+            <button data-set="-1">削除</button>
+        </label>
+
+        <label>
+            特技(最大5つまで入力可):
+            <input type="text" class="input-skill" name="skill">
+            <button data-set="1">追加</button>
+            <button data-set="-1">削除</button>
+        </label>
+
+        <label>
+            好きなタイプ(最大5つまで入力可):
+            <input type="text" class="input-like" name="like">
+            <button data-set="1">追加</button>
+            <button data-set="-1">削除</button>
+        </label>
+
+        <label>
+            ひとこと:
+            <textarea rows="3" class="input-comment" name="comment"></textarea>
+        </label>
+
+
     </div>
     <div class="preview-side">
         <p>名前:<Span data-bind="displayName">{未入力}</Span></p>
+        <p>地域:<Span data-bind="area">{未入力}</Span></p>
+        <p>年齢:<Span data-bind="age">{未入力}</Span></p>
+        <p>誕生日:<Span data-bind="birthday">{未入力}</Span></p>
+        <p>職業:<Span data-bind="job">{未入力}</Span></p>
+        <p>趣味:<Span data-bind="hobby">{未入力}</Span></p>
+        <p>特技:<Span data-bind="skill">{未入力}</Span></p>
+        <p>好きなタイプ:<Span data-bind="like">{未入力}</Span></p>
+        <p>ひとこと:<Span data-bind="comment">{未入力}</Span></p>
     </div>
   </div>
 </body>
