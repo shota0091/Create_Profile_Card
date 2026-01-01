@@ -1,3 +1,4 @@
+// 都道府県のリスト作成
 const PREF_BY_AREA = {
   hokkaido_tohoku: ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島"],
   kanto: ["茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川"],
@@ -43,8 +44,24 @@ function setupRegionPrefSelect() {
     }
 
     prefSelect.value = "";
+
+    // 地方・都道府県が変更された際画面表示する
+    document.addEventListener("change",(e) => {
+      if (!(e.target instanceof HTMLSelectElement)) return;
+
+      if (e.target.name !== "areaKey" && e.target.name !== "prefecture") return;
+
+      const areaSelect = document.getElementById("areaSelect");
+      const prefSelect = document.getElementById("prefSelect");
+
+      const areaLabel = areaSelect.value ? areaSelect.selectedOptions[0].textContent : "";
+      const prefLabel = prefSelect.value ? prefSelect.value : ""; // 都道府県は valueに日本語を入れてる前提
+
+      serPreview("area", prefLabel || areaLabel);
+    });
   });
 }
+
 
 // deferならDOMはできてるので基本これでOK
 setupRegionPrefSelect();

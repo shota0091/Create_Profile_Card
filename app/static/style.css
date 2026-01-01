@@ -6,12 +6,12 @@
 
 .input-side{
   background: #696969;
-  flex: 2;
+  flex: 4;
 }
 
 .preview-side{
   background: #c0c0c0;
-  flex: 3;
+  flex: 2;
   min-height: 200px;
 }
 
@@ -20,3 +20,42 @@
     flex-direction: column;
   }
 }
+
+.icon-btn{
+  --btn-size: 20px;     /* ←ここを小さくする */
+  --border-size: 2px;
+  --bar-len: 14px;
+  --bar-thick: 4px;
+
+  width: var(--btn-size);
+  height: var(--btn-size);
+  border-radius: 999px;
+  border: var(--border-size) solid #111;
+  background: #fff;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.icon{
+  position: relative;
+  width: var(--bar-len);
+  height: var(--bar-len);
+}
+
+.icon::before,
+.icon::after{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--bar-len);
+  height: var(--bar-thick);
+  background: #111;
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.icon.plus::after{ transform: translate(-50%, -50%) rotate(90deg); }
+.icon.minus::after{ display: none; }
