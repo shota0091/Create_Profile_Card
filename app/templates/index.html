@@ -5,113 +5,145 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Create Profile Card</title>
 
-  <!-- file:// でも読める相対パス -->
   <link rel="stylesheet" href="../static/style.css" />
-  
+
   <script src="../static/preview.js" defer></script>
-  <!-- <script src="../static/bind.js" defer></script>-->
   <script src="../static/select-region.js" defer></script>
   <script src="../static/main.js" defer></script>
-  <script src="../static/addcontentItem.js" defer></script>
 </head>
+
 <body>
   <div class="app">
-    <div class="input-side">
-        <label class="input-side-title">入力画面</label>
-        <label>Name:</label>
-        <input type="text" class="input-Name" name="displayName">
-        
-        <label>地域（地方）:</label>
-        <select id="areaSelect" name="areaKey">
-            <option value="">未選択</option>
-            <option value="hokkaido_tohoku">北海道・東北</option>
-            <option value="kanto">関東</option>
-            <option value="hokuriku">北陸</option>
-            <option value="chubu">中部</option>
-            <option value="kinki">近畿</option>
-            <option value="chugoku">中国</option>
-            <option value="shikoku">四国</option>
-            <option value="kyushu_okinawa">九州・沖縄</option>
+
+    <section id="stepInput" class="input-side">
+      <label class="input-side-title">入力画面</label>
+
+      <label for="displayName">Name:</label>
+      <input id="displayName" type="text" class="input-Name" name="displayName" placeholder="例）Name" />
+
+      <label for="areaSelect">地域（地方）:</label>
+      <select id="areaSelect" name="areaKey">
+        <option value="">未選択</option>
+        <option value="hokkaido_tohoku">北海道・東北</option>
+        <option value="kanto">関東</option>
+        <option value="hokuriku">北陸</option>
+        <option value="chubu">中部</option>
+        <option value="kinki">近畿</option>
+        <option value="chugoku">中国</option>
+        <option value="shikoku">四国</option>
+        <option value="kyushu_okinawa">九州・沖縄</option>
+      </select>
+
+      <label for="prefSelect">都道府県:</label>
+      <select id="prefSelect" name="prefecture" disabled>
+        <option value="">地方を選択してください</option>
+      </select>
+
+      <label for="ageSelect">年齢:</label>
+      <select id="ageSelect" name="age">
+        <option value="">未選択</option>
+      </select>
+
+      <label>誕生日:</label>
+      <div class="birthday-row">
+        <select id="birthMonth" name="birthMonth">
+          <option value="">月</option>
         </select>
-        
-        <label>都道府県:</label>
-        <select id="prefSelect" name="prefecture" disabled>
-            <option value="">地方を選択してください</option>
-        </select>    
 
-        <label>年齢:</label>
-        <input type="number" class="input-age" name="age">
-        
-        <label>誕生日:</label>
-        <input type="text" class="input-birthday" name="birthday">
-        
+        <select id="birthDay" name="birthDay" disabled>
+          <option value="">日</option>
+        </select>
+      </div>
 
-        <label>職業:</label>
-        <input type="text" class="input-job" name="job">
-        
-        <div class="field-block" data-group="hobby">
-            <label>趣味(最大5つまで入力可):</label>
-            <div class="multi-actions">
-                <button type="button" class="icon-btn" data-action="add" aria-label="追加">
-                    <span class="icon plus" aria-hidden="true"></span>
-                </button>
+      <label for="job">職業:</label>
+      <input id="job" type="text" class="input-job" name="job" placeholder="例）SE" />
 
-                <button type="button" class="icon-btn" data-action="remove" aria-label="削除">
-                    <span class="icon minus" aria-hidden="true"></span>
-                </button>
+      <label for="hobbyInput">趣味（スペース区切り・最大5つ）:</label>
+      <input type="text" name="hobby" id="hobbyInput" placeholder="例）筋トレ 映画 釣り" />
+
+      <label for="skillInput">特技・スキル（スペース区切り・最大5つ）:</label>
+      <input type="text" name="skill" id="skillInput" placeholder="例）Java SQL Git" />
+
+      <label for="likeInput">好きなタイプ（スペース区切り・最大5つ）:</label>
+      <input type="text" name="like" id="likeInput" placeholder="例）優しい 一緒に笑える" />
+
+      <label for="comment">ひとこと:</label>
+      <textarea id="comment" rows="3" class="input-comment" name="comment" placeholder="例）よろしくお願いします！"></textarea>
+
+      <div style="margin-top:16px;">
+        <button type="button" id="btnToPreview">Preview</button>
+      </div>
+    </section>
+
+    <dialog id="previewModal" class="modal">
+      <div class="modal-header">
+        <div class="modal-title">プレビュー</div>
+        <button type="button" id="btnClosePreview" class="modal-close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="preview-side">
+          <div class="card-wrap" id="cardWrap">
+            <div class="profile-card" id="profileCard">
+              <div class="v name"><span data-bind="displayName">未入力</span></div>
+              <div class="v region"><span data-bind="area">未入力</span></div>
+              <div class="v age"><span data-bind="age">未入力</span></div>
+              <div class="v birthday"><span data-bind="birthday">未入力</span></div>
+              <div class="v job"><span data-bind="job">未入力</span></div>
+
+              <div class="list hobby" data-label="Hobby">
+                <div class="preview-items preview-items--col" data-bind-list="hobby"></div>
+              </div>
+              <div class="list skill" data-label="Skill">
+                <div class="preview-items preview-items--col" data-bind-list="skill"></div>
+              </div>
+              <div class="list like" data-label="Like">
+                <div class="preview-items preview-items--col" data-bind-list="like"></div>
+              </div>
+            <div class="v comment"><span data-bind="comment">よろしくお願いします。</span></div>
             </div>
-            <div class="multi-inputs" data-inputs="hobby">
-                <input type="text" name="hobby1" id="hobby1" class="text-input">
-            </div>
+          </div>
         </div>
-        
-        <div class="field-block" data-group="skill">
-            <label>特技・スキル(最大5つまで入力可):</label>
-            <div class="multi-actions">
-                <button type="button" class="icon-btn" data-action="add" aria-label="追加">
-                    <span class="icon plus" aria-hidden="true"></span>
-                </button>
+      </div>
 
-                <button type="button" class="icon-btn" data-action="remove" aria-label="削除">
-                    <span class="icon minus" aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="multi-inputs" data-inputs="skill">
-                <input type="text" name="skill1" id="skill1" class="text-input">
-            </div>
-        </div>
+      <div class="modal-footer">
+        <button class="modal-btn btn-back">Back</button>
+        <button class="modal-btn btn-create">Create</button>
+      </div>
+    </dialog>
 
-        <div class="field-block" data-group="like">
-            <label>特技・スキル(最大5つまで入力可):</label>
-            <div class="multi-actions">
-                <button type="button" class="icon-btn" data-action="add" aria-label="追加">
-                    <span class="icon plus" aria-hidden="true"></span>
-                </button>
-
-                <button type="button" class="icon-btn" data-action="remove" aria-label="削除">
-                    <span class="icon minus" aria-hidden="true"></span>
-                </button>
-            </div>
-            <div class="multi-inputs" data-inputs="like">
-                <input type="text" name="like1" id="like1" class="text-input">
-            </div>
-        </div>
-
-        <label>ひとこと:</label>
-        <textarea rows="3" class="input-comment" name="comment"></textarea>
-        
-    </div>
-    <div class="preview-side">
-        <p>名前:<Span data-bind="displayName">{未入力}</Span></p>
-        <p>地域:<Span data-bind="area">{未入力}</Span></p>
-        <p>年齢:<Span data-bind="age">{未入力}</Span></p>
-        <p>誕生日:<Span data-bind="birthday">{未入力}</Span></p>
-        <p>職業:<Span data-bind="job">{未入力}</Span></p>
-        <p>趣味:<span class="preview-items" data-bind-list="hobby"></span></p>
-        <p>特技・スキル:<span class="preview-items" data-bind-list="skill"></span></p>
-        <p>好きなタイプ:<span class="preview-items" data-bind-list="like"></span></p>
-        <p>ひとこと:<Span data-bind="comment">{未入力}</Span></p>
-    </div>
   </div>
 </body>
+<script>
+  // 既存のコードがある場合は、その下に追加してください
+
+  const modal = document.querySelector('#previewModal'); // IDはHTMLに合わせて確認してください
+  const btnBack = document.querySelector('.btn-back');
+  const btnClose = document.querySelector('.modal-close'); // 右上の×ボタン
+
+  // モーダルを閉じる関数
+  const closeModal = () => {
+    // もし <dialog> タグを使っている場合
+    if (modal.close) {
+      modal.close(); 
+    } 
+    // もし class="modal" の display 制御だけでやっている場合
+    else {
+      modal.removeAttribute('open');
+      modal.style.display = 'none';
+    }
+  };
+
+  // Backボタンにイベント追加
+  if(btnBack) {
+    btnBack.addEventListener('click', closeModal);
+  }
+
+  // 右上の×ボタンにも同じ動きを追加
+  if(btnClose) {
+    btnClose.addEventListener('click', closeModal);
+  }
+
+  // (参考) モーダルを開く処理は既存の「プレビュー」ボタンなどに紐付いているはずです
+</script>
 </html>
