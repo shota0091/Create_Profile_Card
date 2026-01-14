@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Card Generator</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+    <header style="text-align:center; margin-bottom:30px;">
+        <h1 style="font-weight:800; letter-spacing:1px;">Profile Generator</h1>
+    </header>
+
+    <main class="bento-grid">
+        <section class="glass-card">
+            <h2 class="section-title">Personal Info</h2>
+            <div class="field-group">
+                <label>お名前</label>
+                <input type="text" id="userName" value="田中 太郎" placeholder="名前を入力">
+            </div>
+            <div class="field-group">
+                <label>性別</label>
+                <select id="genderSelect">
+                    <option value="未選択">選択してください</option>
+                    <option value="男性">男性</option>
+                    <option value="女性">女性</option>
+                    <option value="その他">その他</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label>年齢</label>
+                <select id="ageSelect"><option value="">選択してください</option></select>
+            </div>
+            <div class="field-group">
+                <label>誕生日</label>
+                <div class="birthday-row">
+                    <select id="birthMonth"><option value="">月</option></select>
+                    <select id="birthDay" disabled><option value="">日</option></select>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h2 class="section-title">Background</h2>
+            <div class="field-group">
+                <label>地域（地方）</label>
+                <select id="areaSelect">
+                    <option value="">選択してください</option>
+                    <option value="hokkaido_tohoku">北海道・東北</option>
+                    <option value="kanto">関東</option>
+                    <option value="chubu">中部</option>
+                    <option value="kinki">近畿</option>
+                    <option value="chugoku">中国</option>
+                    <option value="shikoku">四国</option>
+                    <option value="kyushu_okinawa">九州・沖縄</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label>都道府県</label>
+                <select id="prefSelect" disabled>
+                    <option value="">地方を選択してください</option>
+                </select>
+            </div>
+            <div class="field-group">
+                <label>職業</label>
+                <input type="text" id="jobInput" placeholder="例: エンジニア">
+            </div>
+        </section>
+
+        <section class="glass-card">
+            <h2 class="section-title">Interests</h2>
+            <p class="hint">※スペース区切りで最大5つまで</p>
+            <div class="field-group">
+                <label>趣味</label>
+                <input type="text" id="hobbyInput" placeholder="サウナ カフェ巡り">
+            </div>
+            <div class="field-group">
+                <label>特技</label>
+                <input type="text" id="skillInput" placeholder="プログラミング 料理">
+            </div>
+            <div class="field-group">
+                <label>好きなタイプ</label>
+                <input type="text" id="likeInput" placeholder="優しい人 面白い人">
+            </div>
+        </section>
+
+        <section class="glass-card" style="grid-column: 1 / -1;">
+            <h2 class="section-title">Message</h2>
+            <textarea id="messageInput" rows="3" placeholder="よろしくお願いします！"></textarea>
+            
+            <button id="btnToPreview" class="btn-primary">Generate Preview</button>
+        </section>
+    </main>
+
+    <dialog id="previewModal" class="modal-glass">
+        <div class="modal-header">
+            <span class="modal-title">Card Preview</span>
+            <button id="btnClosePreview" class="modal-close">×</button>
+        </div>
+        
+        <div class="modal-body">
+            <div class="preview-side">
+                <div id="cardWrap" class="card-wrap">
+                    <canvas id="profileCanvas" width="614" height="868"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button id="btnBack" class="modal-btn btn-back">Back</button>
+            <button id="btnCreate" class="modal-btn btn-create">Create</button>
+        </div>
+    </dialog>
+
+    <script src="../static/script.js"></script>
+</body>
+</html>
