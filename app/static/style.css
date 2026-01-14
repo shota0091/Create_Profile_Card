@@ -1,319 +1,227 @@
-/* =========================================================
-   style.css（モーダル縮小・ボタン追加版）
-   ========================================================= */
-
-/* ---------- reset / global ---------- */
-* { box-sizing: border-box; }
+:root {
+    --bg-dark: #050505;
+    --glass: rgba(255, 255, 255, 0.05);
+    --accent: linear-gradient(135deg, #007AFF, #00C7BE);
+    --text: #F5F5F7;
+}
 
 body {
-  margin: 0;
-  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
-  background-color: #f4f5f7; 
-  color: #333;
-  line-height: 1.6;
+    background: var(--bg-dark);
+    color: var(--text);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
 }
 
-/* ---------- layout ---------- */
-.app {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px 20px;
+/* --- レイアウト --- */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
 }
 
-/* プレビューエリア（メイン画面では非表示） */
-.app > .preview-side {
-  display: none; 
+/* --- カードデザイン --- */
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    padding: 24px;
+    transition: transform 0.3s ease;
 }
 
-/* ---------- input side (入力フォーム) ---------- */
-.input-side {
-  background: #ffffff;
-  width: 100%;
-  max-width: 500px;
-  border: none;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 
-              0 5px 15px rgba(0,0,0,0.05);
+.section-title {
+    color: #007AFF;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    margin-top: 0;
 }
 
-.input-side-title {
-  display: block;
-  font-size: 24px;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 30px;
-  color: #4a4a4a;
-  letter-spacing: 1px;
+.hint {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 10px;
 }
 
-.input-side label {
-  display: block;
-  margin-top: 20px;
-  margin-bottom: 8px;
-  font-weight: 700;
-  font-size: 14px;
-  color: #666;
+/* --- フォーム要素 --- */
+.field-group { margin-bottom: 15px; }
+.field-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 16px; /* スマホでズームしないサイズ */
+    box-sizing: border-box;
 }
 
-.input-side input,
-.input-side select,
-.input-side textarea {
-  width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #f0f0f0;
-  border-radius: 12px;
-  font-size: 16px;
-  background-color: #fafafa;
-  outline: none;
-  transition: all 0.3s ease;
-  color: #333;
-}
-
-.input-side input:focus,
-.input-side select:focus,
-.input-side textarea:focus {
-  border-color: #dcbfa3;
-  background-color: #fff;
-  box-shadow: 0 0 0 4px rgba(220, 191, 163, 0.2);
-}
-
-.input-side textarea {
-  resize: vertical;
-  min-height: 100px;
-}
+select option { background: #1a1a1c; color: white; }
 
 .birthday-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
 }
 
+/* --- メインボタン --- */
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    border-radius: 50px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    transition: transform 0.2s;
+}
+.btn-primary:active { transform: scale(0.98); }
+
 /* =========================================================
-   Preview Button (入力フォームのボタン)
+   Preview / Modal (PC・スマホ 完全自動調整版)
    ========================================================= */
 
-/* 入力エリア内のボタンをモダンにする */
-.input-side button {
-  display: block;
-  width: 100%;       /* 横幅いっぱいに広げる */
-  max-width: 300px;  /* PCで見やすすぎないように制限 */
-  margin: 30px auto 0; /* 上に余白、左右中央寄せ */
-  
-  padding: 16px 24px;
-  
-  /* ブラウン系のグラデーションでリッチ感を出す */
-  background: linear-gradient(135deg, #8d6e63, #5d4037);
-  color: #fff;
-  
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  
-  border: none;
-  border-radius: 50px; /* 丸みのあるピル型（カプセル型） */
-  
-  cursor: pointer;
-  box-shadow: 0 4px 15px rgba(93, 64, 55, 0.3); /* ふんわりした影 */
-  transition: all 0.3s ease;
+dialog.modal-glass {
+    border: none;
+    border-radius: 20px;
+    padding: 0;
+    background: #fdfdfd;
+    color: #333;
+    
+    /* PCでの幅：少しスリムに */
+    width: min(520px, 94vw);
+    
+    /* 高さ：画面からはみ出さない */
+    max-height: 95vh;
+    
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
 }
 
-/* ホバー時の動き（ふわっと浮く） */
-.input-side button:hover {
-  transform: translateY(-3px); /* 少し上に移動 */
-  box-shadow: 0 8px 25px rgba(93, 64, 55, 0.4); /* 影を濃く */
-  background: linear-gradient(135deg, #a1887f, #6d4c41); /* 色を少し明るく */
+dialog.modal-glass[open] {
+    display: flex;
+    flex-direction: column;
 }
 
-/* クリック時の動き（沈む） */
-.input-side button:active {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 10px rgba(93, 64, 55, 0.3);
-}
-
-/* =========================================================
-   style.css (プレビュー修正・モーダル調整版)
-   ========================================================= */
-
-/* (前半の input-side などは変更なしでOKです) */
-/* ...省略... */
-
-/* =========================================================
-   Preview / Modal 修正箇所
-   ========================================================= */
-/* =========================================================
-   style.css (モーダル拡大・原寸表示版)
-   ========================================================= */
-
-/* (前半の input-side などは変更不要です。以下の Modal部分 を上書きしてください) */
-
-/* =========================================================
-   Preview / Modal (修正箇所)
-   ========================================================= */
-/* =========================================================
-   Preview / Modal (カードを枠内に綺麗に収める版)
-   ========================================================= */
-
-/* モーダル自体の設定 */
-/* モーダル自体の設定 */
-.modal {
-  border: none;
-  border-radius: 12px;
-  padding: 0;
-  
-  /* 横幅：スマホなら96%、PCなら600px */
-  width: min(600px, 96vw);
-  
-  /* 高さ：画面からはみ出さない */
-  max-height: 95vh;
-  
-  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-  display: flex;
-  flex-direction: column;
-}
-
-.modal:not([open]) { display: none; }
-
-.modal::backdrop {
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(2px);
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
 }
 
 /* ヘッダー */
 .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 20px;
-  border-bottom: 1px solid #eee;
-  background: #fff;
-  flex-shrink: 0;
-  z-index: 10;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+    z-index: 10;
 }
-
-.modal-title { font-weight: 700; font-size: 16px; color: #444; }
-
+.modal-title { font-weight: bold; font-size: 1.1rem; color: #333; }
 .modal-close {
-  border: none; background: #f5f5f5; color: #888;
-  border-radius: 50%; width: 30px; height: 30px;
-  cursor: pointer; font-size: 18px;
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.2s;
+    background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #888;
+    line-height: 1; padding: 0 5px;
 }
-.modal-close:hover { background: #e0e0e0; }
 
-/* ボディ (スクロールバー消去) */
+/* ボディ（ここが修正の要） */
 .modal-body {
-  padding: 0;
-  background: #f0f0f0;
-  overflow: hidden; /* スクロールバー完全削除 */
-  flex-grow: 1;
-  
-  /* 中身を中央寄せにする強力な設定 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    flex: 1;
+    background: #e0e0e0; /* 背景色 */
+    position: relative;
+    overflow: hidden; /* スクロールバー完全削除 */
+    
+    /* ★Flexboxで中身を常に「ど真ん中」に配置 */
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+/* プレビュー枠 */
+.preview-side {
+    width: 100%;
+    /* 高さは固定しない（auto） */
+    height: auto; 
+    
+    /* 中身の配置 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0; /* 上下の安全マージン */
+}
+
+/* カード本体 */
+.card-wrap {
+    /* 絶対配置（absolute）はやめる */
+    position: relative;
+    width: 614px;
+    height: 868px;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    
+    /* ★PCでの縮小設定 */
+    /* 0.55倍 (高さ約477px) にして、ノートPCでも確実に入るようにする */
+    transform: scale(0.48);
+    /* 中央を基準に縮小 */
+    transform-origin: center center;
+    
+    /* ★重要：縮小で空いてしまう上下の空白を削除する設定 */
+    /* 計算: (868 - 477) ÷ 2 ≒ 195px */
+    margin-top: -195px;
+    margin-bottom: -195px;
 }
 
 /* フッター */
 .modal-footer {
-  padding: 12px 20px;
-  background: #fff;
-  border-top: 1px solid #eee;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  flex-shrink: 0;
+    padding: 12px 20px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+    z-index: 10;
 }
 
 .modal-btn {
-  padding: 8px 24px; border-radius: 6px; font-weight: 600; font-size: 14px;
-  cursor: pointer; border: none; transition: opacity 0.2s;
+    padding: 10px 24px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 0.9rem;
 }
-.modal-btn:hover { opacity: 0.8; }
-.btn-back { background: #e0e0e0; color: #555; }
-.btn-create { background: #6d4c41; color: #fff; box-shadow: 0 3px 8px rgba(109, 76, 65, 0.2); }
+.btn-back { background: #f0f0f0; color: #333; }
+.btn-create { background: #6d4c41; color: white; box-shadow: 0 4px 10px rgba(109,76,65,0.3); }
 
 
-/* ★★★ プレビュー調整エリア (修正版) ★★★ */
-
-.preview-side {
-  width: 100%;
-  
-  /* 縮小後のカードが収まる高さを「指定」してしまう */
-  /* Scale 0.65 の場合、高さは約565px */
-  height: 570px;
-  
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* 上辺合わせで配置（計算がずれないように） */
-  
-  /* カードの上端に少し余白 */
-  padding-top: 2px;
-  box-sizing: border-box;
-}
-
-/* カードを包む枠 */
-.card-wrap {
-  width: 614px;
-  height: 868px;
-  
-  /* ★重要：PCでの縮小設定 */
-  /* top center（上中央）を基準に縮小する → 位置ズレを防ぐ */
-  transform-origin: top center;
-  transform: scale(0.65);
-  
-  /* マイナスマージンは全廃止（バグの元なので削除） */
-  margin: 0;
-  
-  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-  border-radius: 12px;
-  background-color: #fff;
-  flex-shrink: 0; /* 潰れないようにする */
-}
-
-
-/* ---------- スマホ対応 (絶対消えない設定) ---------- */
+/* =========================================================
+   スマホ対応 (ここは前回の「いい感じ」の状態を維持)
+   ========================================================= */
 @media (max-width: 500px) {
-  
-  /* プレビューエリアの高さをスマホ用に縮める */
-  .preview-side {
-    height: 480px; /* 縮小後のカード高さに合わせる */
-    padding-top: 15px;
-  }
+    dialog.modal-glass {
+        width: 96vw;
+        max-height: 92vh;
+    }
 
-  .card-wrap {
-    /* ★重要：スマホでの縮小設定 */
-    /* 0.53倍 (53%) くらいが安全圏 */
-    transform: scale(0.53);
-    
-    /* 基準点は変えない */
-    transform-origin: top center;
-  }
+    .preview-side {
+        padding: 10px 0;
+    }
+
+    .card-wrap {
+        /* スマホ用縮小 (0.53倍) */
+        transform: scale(0.57);
+        transform-origin: center center;
+        
+        /* スマホ用の余白削除 */
+        /* 計算: (868 - 460) ÷ 2 ≒ 204px */
+        margin-top: -204px;
+        margin-bottom: -204px;
+    }
 }
-
-
-/* --- 以下、カード内部のデザイン（変更なし） --- */
-.profile-card {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-  background: url("../static/template.png") no-repeat;
-  background-size: cover;
-  font-family: "Noto Sans JP", sans-serif; line-height: 1.2;
-  border-radius: 12px; overflow: hidden; color: #6b4a3a;
-}
-/* 各パーツの配置（変更なし） */
-.profile-card .v, .profile-card .list { position: absolute; }
-.profile-card .name { left: 160px; top: 173px; width: 430px; font-size: 22px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.profile-card .region { left: 120px; top: 245px; width: 230px; font-size: 16px; }
-.profile-card .age    { left: 410px; top: 245px; width: 160px; font-size: 16px; }
-.profile-card .birthday { left: 120px; top: 305px; width: 230px; font-size: 16px; }
-.profile-card .job      { left: 410px; top: 307px; width: 160px; font-size: 16px; }
-.profile-card .list { top: 443px; height: 104px; width: 158px; padding: 10px; overflow: hidden; }
-.profile-card .hobby { left: 32px; }
-.profile-card .skill { left: 228px; }
-.profile-card .like  { left: 425px; }
-.profile-card .comment { left: 26px; top: 664px; width: 560px; height: 154px; font-size: 20px; white-space: pre-wrap; overflow-wrap: anywhere; overflow: hidden; padding:10px 20px}
-.preview-items { display: flex; flex-direction: column; gap: 6px; align-items: center; text-align: center; width: 100%; }
-.preview-chip { display: block; width: 100%; border: none; background: transparent; padding: 0; font-size: 14px; color: #6b4a3a; }
