@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const ctx = canvas.getContext('2d');
     const modal = document.getElementById('previewModal');
     
-    // 画像の読み込み
+    // 画像の読み込み設定
     const templateImg = new Image();
-    // ★注意: 同じフォルダにこの画像があることを確認してください
+    // セキュリティエラー回避のため（ローカル環境でもサーバー経由なら有効）
+    templateImg.crossOrigin = "Anonymous";
+    // ★画像ファイル名が正しいか必ず確認してください
     templateImg.src = '../static/template.jpeg'; 
 
     // 都道府県データ
@@ -19,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         kyushu_okinawa: ["福岡", "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"]
     };
 
-    // 初期化処理
+    // 初期化処理（セレクトボックスの生成など）
     const initSelects = () => {
         // 年齢
         const ageSel = document.getElementById('ageSelect');
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // 地域連動
+    // 地域連動（地方を選ぶと都道府県が出る）
     document.getElementById('areaSelect').addEventListener('change', (e) => {
         const prefSel = document.getElementById('prefSelect');
         const prefs = PREF_DATA[e.target.value] || [];
@@ -48,15 +50,13 @@ document.addEventListener('DOMContentLoaded', () => {
         prefSel.disabled = !prefs.length;
     });
 
-    // タグ取得（スペース区切り）
+    // タグ取得（スペース区切りで配列化）
     const getTags = (id) => {
         const val = document.getElementById(id).value;
-        // 全角・半角スペースで分割し、空文字除去、最大5つまで
         return val.trim().split(/[\s　]+/).filter(Boolean).slice(0, 5);
     };
 
-    // Canvas描画処理
- // Canvas描画処理
+    // ★★★ Canvas描画処理（ここがメイン） ★★★
     const drawCard = () => {
         // キャンバスをクリア
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -64,30 +64,29 @@ document.addEventListener('DOMContentLoaded', () => {
         // 背景画像を描画
         ctx.drawImage(templateImg, 0, 0, 614, 868);
 
-        // --- 名前（性別で色変え） ---
-        
-        // ★追加：性別を取得して色を分岐させる
+        // --------------------------------------------------
+        // 1. お名前（性別で色分け）
+        // --------------------------------------------------
         const gender = document.getElementById('genderSelect').value;
 
+        // 色の分岐
         if (gender === '男性') {
-            ctx.fillStyle = "#007AFF"; // 男性なら青 (鮮やかなブルー)
+            ctx.fillStyle = "#007AFF"; // 青
         } else if (gender === '女性') {
-            ctx.fillStyle = "#FF4081"; // 女性なら赤 (少しピンク寄りの赤で可愛く)
+            ctx.fillStyle = "#FF4081"; // 赤（ピンク）
         } else {
-            ctx.fillStyle = "#6b4a3a"; // それ以外（非公開など）はブラウン
+            ctx.fillStyle = "#6b4a3a"; // ブラウン（デフォルト）
         }
 
         ctx.font = "bold 22px 'Helvetica Neue', Arial, sans-serif";
         const name = document.getElementById('userName').value || "未入力";
-        // ★名前を描画（ここで設定した色が使われます）
         ctx.fillText(name, 130, 196); 
 
 
-        // --- 基本情報など（ここからは元の色に戻す） ---
-        
-        // ★追加：色をブラウンに戻す（これがないと全部青や赤になっちゃいます）
-        ctx.fillStyle = "#6b4a3a"; 
-        
+        // --------------------------------------------------
+        // 2. 基本情報（色をブラウンに戻して描画）
+        // --------------------------------------------------
+        ctx.fillStyle = "#6b4a3a"; // ★必ず戻す
         ctx.font = "bold 16px 'Helvetica Neue', Arial, sans-serif";
         
         // 地域
@@ -108,31 +107,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const job = document.getElementById('jobInput').value || "未入力";
         ctx.fillText(job, 410, 322);
 
-        // --- 3カラム (趣味・特技・タイプ) ---
-        ctx.textAlign = "center"; // 中央揃え
 
+        // --------------------------------------------------
+        // 3. 3カラム（趣味・特技・タイプ）中央揃え
+        // --------------------------------------------------
+        ctx.textAlign = "center"; // ★文字の基準を中心に
+
+        // リスト描画用関数
         const drawList = (tags, xBase, yStart) => {
             let y = yStart;
             tags.forEach(tag => {
                 ctx.fillText(tag, xBase, y);
-                y += 28;
+                y += 28; // 行間
             });
         };
 
-        // 趣味
-        drawList(getTags('hobbyInput'), 115, 462);
-        // 特技
-        drawList(getTags('skillInput'), 312, 462);
-        // タイプ
-        drawList(getTags('likeInput'), 508, 462);
+        // 各ボックスの中心座標を指定して描画
+        drawList(getTags('hobbyInput'), 115, 462); // 趣味
+        drawList(getTags('skillInput'), 312, 462); // 特技
+        drawList(getTags('likeInput'), 508, 462); // タイプ
 
-        // --- ひとこと ---
-        ctx.textAlign = "left"; // 左揃えに戻す
+
+        // --------------------------------------------------
+        // 4. ひとこと（改行・自動折り返し対応）
+        // --------------------------------------------------
+        ctx.textAlign = "left"; // ★左揃えに戻す
         ctx.font = "18px 'Helvetica Neue', Arial, sans-serif";
+        
         const msg = document.getElementById('messageInput').value || "よろしくお願いします！";
         
-        // 折り返し処理
-        const splitText = (text, maxWidth) => {
+        // 横幅あふれ計算用関数
+        const splitTextByWidth = (text, maxWidth) => {
             let lines = [];
             let line = '';
             for (let i = 0; i < text.length; i++) {
@@ -146,42 +151,67 @@ document.addEventListener('DOMContentLoaded', () => {
             lines.push(line);
             return lines;
         };
+
+        // まず「改行コード」で分割し、その後「横幅」で分割する
+        const rawLines = msg.split('\n');
+        let finalLines = [];
+
+        rawLines.forEach(rawLine => {
+            const wrapped = splitTextByWidth(rawLine, 520); // 520pxで折り返し
+            finalLines = finalLines.concat(wrapped);
+        });
         
-        const lines = splitText(msg, 520);
+        // 描画実行
         let lineY = 710;
-        lines.forEach(l => {
+        finalLines.forEach(l => {
             ctx.fillText(l, 46, lineY);
             lineY += 26;
         });
     };
 
-    // イベントリスナー設定
+    // ★★★ イベント設定 ★★★
     const openModal = () => {
-        drawCard();
+        drawCard(); // 画像生成を実行
         modal.showModal();
-        // モーダルを開いた瞬間にスクロール位置をリセット
-        document.querySelector('.modal-body').scrollTop = 0;
+        // モーダルを開いた瞬間にスクロール位置を上に戻す
+        const body = document.querySelector('.modal-body');
+        if(body) body.scrollTop = 0;
     };
     
     const closeModal = () => modal.close();
 
-    document.getElementById('btnToPreview').addEventListener('click', openModal);
-    document.getElementById('btnClosePreview').addEventListener('click', closeModal);
-    document.getElementById('btnBack').addEventListener('click', closeModal);
+    // ボタンアクション
+    const btnPreview = document.getElementById('btnToPreview');
+    if(btnPreview) btnPreview.addEventListener('click', openModal);
 
-    // 画像ダウンロード
-    document.getElementById('btnCreate').addEventListener('click', () => {
-        const link = document.createElement('a');
-        link.download = `profile_${Date.now()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        closeModal();
-    });
+    const btnClose = document.getElementById('btnClosePreview');
+    if(btnClose) btnClose.addEventListener('click', closeModal);
+    
+    const btnBack = document.getElementById('btnBack');
+    if(btnBack) btnBack.addEventListener('click', closeModal);
 
+    // 画像保存（ダウンロード）
+    const btnCreate = document.getElementById('btnCreate');
+    if(btnCreate) {
+        btnCreate.addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = `profile_${Date.now()}.png`;
+            try {
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                closeModal();
+            } catch (e) {
+                console.error("画像保存エラー: ローカルファイルとして開いている可能性があります。", e);
+                alert("画像の保存に失敗しました。VS CodeのLive Server機能などを使ってプレビューしてください。");
+            }
+        });
+    }
+
+    // 初期化実行
     initSelects();
     
-    // 画像読み込み完了を待つ（念のため）
+    // 念のため画像読み込み完了ログ
     templateImg.onload = () => {
-        console.log("Template Loaded");
+        console.log("Template Loaded Successfully");
     };
 });
