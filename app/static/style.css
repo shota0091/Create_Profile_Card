@@ -1,0 +1,227 @@
+:root {
+    --bg-dark: #050505;
+    --glass: rgba(255, 255, 255, 0.05);
+    --accent: linear-gradient(135deg, #007AFF, #00C7BE);
+    --text: #F5F5F7;
+}
+
+body {
+    background: var(--bg-dark);
+    color: var(--text);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+/* --- レイアウト --- */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* --- カードデザイン --- */
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 28px;
+    padding: 24px;
+    transition: transform 0.3s ease;
+}
+
+.section-title {
+    color: #007AFF;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    margin-top: 0;
+}
+
+.hint {
+    font-size: 0.8rem;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+/* --- フォーム要素 --- */
+.field-group { margin-bottom: 15px; }
+.field-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 0.9rem; }
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 16px; /* スマホでズームしないサイズ */
+    box-sizing: border-box;
+}
+
+select option { background: #1a1a1c; color: white; }
+
+.birthday-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+/* --- メインボタン --- */
+.btn-primary {
+    width: 100%;
+    padding: 16px;
+    border-radius: 50px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+    transition: transform 0.2s;
+}
+.btn-primary:active { transform: scale(0.98); }
+
+/* =========================================================
+   Preview / Modal (PC・スマホ 完全自動調整版)
+   ========================================================= */
+
+dialog.modal-glass {
+    border: none;
+    border-radius: 20px;
+    padding: 0;
+    background: #fdfdfd;
+    color: #333;
+    
+    /* PCでの幅：少しスリムに */
+    width: min(520px, 94vw);
+    
+    /* 高さ：画面からはみ出さない */
+    max-height: 95vh;
+    
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+dialog.modal-glass[open] {
+    display: flex;
+    flex-direction: column;
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+}
+
+/* ヘッダー */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+    z-index: 10;
+}
+.modal-title { font-weight: bold; font-size: 1.1rem; color: #333; }
+.modal-close {
+    background: none; border: none; font-size: 1.8rem; cursor: pointer; color: #888;
+    line-height: 1; padding: 0 5px;
+}
+
+/* ボディ（ここが修正の要） */
+.modal-body {
+    flex: 1;
+    background: #e0e0e0; /* 背景色 */
+    position: relative;
+    overflow: hidden; /* スクロールバー完全削除 */
+    
+    /* ★Flexboxで中身を常に「ど真ん中」に配置 */
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+/* プレビュー枠 */
+.preview-side {
+    width: 100%;
+    /* 高さは固定しない（auto） */
+    height: auto; 
+    
+    /* 中身の配置 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0; /* 上下の安全マージン */
+}
+
+/* カード本体 */
+.card-wrap {
+    /* 絶対配置（absolute）はやめる */
+    position: relative;
+    width: 614px;
+    height: 868px;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    border-radius: 12px;
+    
+    /* ★PCでの縮小設定 */
+    /* 0.55倍 (高さ約477px) にして、ノートPCでも確実に入るようにする */
+    transform: scale(0.48);
+    /* 中央を基準に縮小 */
+    transform-origin: center center;
+    
+    /* ★重要：縮小で空いてしまう上下の空白を削除する設定 */
+    /* 計算: (868 - 477) ÷ 2 ≒ 195px */
+    margin-top: -195px;
+    margin-bottom: -195px;
+}
+
+/* フッター */
+.modal-footer {
+    padding: 12px 20px;
+    background: #fff;
+    border-top: 1px solid #eee;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.modal-btn {
+    padding: 10px 24px; border-radius: 50px; border: none; font-weight: bold; cursor: pointer; font-size: 0.9rem;
+}
+.btn-back { background: #f0f0f0; color: #333; }
+.btn-create { background: #6d4c41; color: white; box-shadow: 0 4px 10px rgba(109,76,65,0.3); }
+
+
+/* =========================================================
+   スマホ対応 (ここは前回の「いい感じ」の状態を維持)
+   ========================================================= */
+@media (max-width: 500px) {
+    dialog.modal-glass {
+        width: 96vw;
+        max-height: 92vh;
+    }
+
+    .preview-side {
+        padding: 10px 0;
+    }
+
+    .card-wrap {
+        /* スマホ用縮小 (0.53倍) */
+        transform: scale(0.57);
+        transform-origin: center center;
+        
+        /* スマホ用の余白削除 */
+        /* 計算: (868 - 460) ÷ 2 ≒ 204px */
+        margin-top: -204px;
+        margin-bottom: -204px;
+    }
+}
